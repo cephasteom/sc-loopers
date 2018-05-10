@@ -7,7 +7,7 @@ s.quit;
 // read ServerOptions help file for properties of s.options
 s = Server.local;
 s.options.outDevice_('Built-in Output');
-s.options.numOutputBusChannels_(2);
+s.options.numOutputBusChannels_(4);
 s.options.inDevice_('Built-in Microph');
 s.options.numInputBusChannels_(2);
 s.options.sampleRate_(44100);
@@ -20,9 +20,9 @@ ServerQuit.removeAll;
 // **********************************************************************
 // 2. INIT GLOBAL VARIABLES
 // **********************************************************************
-~out = 0; // there are only two outs so 0 and 1
-~in1 = 2; 
-~in2 = 3; 
+~out = 0;
+~in1 = 4; 
+~in2 = 5; 
 TempoClock.default.tempo = 104 / 60;
 ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
 ~synthsPath = ~projectPath++"/synths";
