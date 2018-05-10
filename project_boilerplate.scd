@@ -20,7 +20,9 @@ ServerQuit.removeAll;
 // **********************************************************************
 // 2. INIT GLOBAL VARIABLES
 // **********************************************************************
-~out = 0;
+~out = 0; // there are only two outs so 0 and 1
+~in1 = 2; 
+~in2 = 3; 
 TempoClock.default.tempo = 104 / 60;
 ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
 ~synthsPath = ~projectPath++"/synths";
@@ -29,7 +31,9 @@ TempoClock.default.tempo = 104 / 60;
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
 ~makeBuffers = {
-	~buffer1 = Buffer.alloc(s, 44100 * 4.0, 1); // a four second 1 channel Buffer
+	~loop1 = Buffer.alloc(s, 44100 * 10, 1); // a four second 1 channel Buffer
+	~input1 = Buffer.alloc(s, 44100 * 4.0, 1); // a four second 1 channel Buffer
+
 };
 
 ~makeBusses = {
