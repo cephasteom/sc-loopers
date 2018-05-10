@@ -22,36 +22,32 @@ ServerQuit.removeAll;
 // **********************************************************************
 ~out = 0;
 TempoClock.default.tempo = 104 / 60;
-~buffers; // populated by ~makeBuffers function on ServerBoot
-~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_boilerplate";
-~buffersPath = ~projectPath++"/buffers";
+~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
 ~synthsPath = ~projectPath++"/synths";
 
 // **********************************************************************
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
+~makeBuffers = {
+	~buffer1 = Buffer.alloc(s, 44100 * 4.0, 1); // a four second 1 channel Buffer
+};
+
 ~makeBusses = {
 	~busses = Dictionary.new;
 	~busses.add(\reverb -> Bus.audio(s, 2));
 	// add more busses as you need them
 };
+
 ~cleanup = {
 	s.newBusAllocators;
 	ServerBoot.removeAll;
 	ServerTree.removeAll;
 	ServerQuit.removeAll;
 };
+
 ~makeNodes = {
 	~mainGroup = Group.new;
 	~reverbGroup = Group.after(~mainGroup);
-	~reverbSynth = Synth.new(
-		\customReverb,
-		[
-			\in, ~busses[\reverb],
-			\out, ~out,
-		],
-		~reverbGroup
-	);
 	// define more fx nodes as you need them
 };
 
@@ -68,13 +64,13 @@ ServerQuit.add(~cleanup); // clean up when quit the server
 s.waitForBoot({
 	s.sync; // ensure actions have completed before moving on (synchronous)
 	// 5a. REGISTER SYNTHDEFS
-	(~synthsPath++"/synth-custom-reverb.scd").load;
+	(~synthsPath++"/record.scd").load;
+	(~synthsPath++"/play.scd").load;
 	s.sync;
 	// load state
 	(~projectPath++"/data.scd").load;
 	// 5b. CREATE NODES AND EVENTS
 	ServerTree.add(~makeNodes); // delay these until you've created your nodes
-	ServerTree.add(~makeEvents); // delay these until you've created your events
 	s.freeAll;
 	s.sync;
 	s.plotTree;
@@ -87,4 +83,5 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 
-// s.quit;
+// Synth.new(\record, [\out, ~out, \bufnum, ~buffer1.bufnum]);
+// Synth.new(\play, [\out, ~out, \bufnum, ~buffer1.bufnum]);
