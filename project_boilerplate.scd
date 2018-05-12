@@ -31,8 +31,7 @@ TempoClock.default.tempo = 104 / 60;
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
 ~makeBuffers = {
-	~loop1 = Buffer.alloc(s, 44100 * 10, 1); // a four second 1 channel Buffer
-	~input1 = Buffer.alloc(s, 44100 * 4.0, 1); // a four second 1 channel Buffer
+	~looper1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
 
 };
 
@@ -87,5 +86,3 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 
-// Synth.new(\record, [\out, ~out, \bufnum, ~buffer1.bufnum]);
-// Synth.new(\play, [\out, ~out, \bufnum, ~buffer1.bufnum]);
