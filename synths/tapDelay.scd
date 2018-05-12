@@ -9,31 +9,49 @@ SynthDef(\test, { |out=0, in=4, buffer|
         1, // no interp
         1.0 // muls for each tap
     );
-    Out.ar(out, [input + tap, input + tap, tap]) // send delayed signal out on channel 2 for feeding back
+    OffsetOut.ar(2, DelayC.ar(tap, 1, 440.reciprocal - ControlRate.ir.reciprocal)); // subtract block size, send tap out of channel 2 to be fed back
+    OffsetOut.ar(out, [input + tap, input + tap]) // send delayed signal out on channel 2 for feeding back
 }).add;
 
 x = Synth(\test, [\buffer, ~buffer, \out, ~out, \in, ~in1]);
 x.free;
 b.free;
 
-    (
-    SynthDef("help-PinkNoise", { arg out=0; 
-        Out.ar(out, PinkNoise.ar(0.1)) 
-    }).send(s);
+// general code flexibility, ability to do routing on implementation
+// block size delay...
+// be able to mute and un mute mic
+// handling of loop time
 
-    SynthDef("help-In", { arg out=0, in=0;
-        var input;
-            input = In.ar(in, 1);
-            Out.ar(out, input);
-    }).send(s);
+    (
+
+    var play, imp, initial;
+
+    SynthDef("testRes", {
+
+    
+
+    play = InFeedback.ar(10, 1); // 10 is feedback channel
+
+    imp = Impulse.ar(1);
+
+    
+
+    // feedback
+
+    
+
+    
+
+    OffsetOut.ar(0, play);
+
+    
+
+    }).play(s);
+
+    
+
+    // Compare with this for tuning
+
+    { SinOsc.ar(440, 0, 0.2) }.play(s, 1);
 
     )
-
-    //play noise on the right channel
-
-    x = Synth("help-PinkNoise", [\out, 1]);
-
-
-    //read the input and play it out on the left channel
-
-    Synth.after(x, "help-In", [\out, 0, \in, 1]); 
