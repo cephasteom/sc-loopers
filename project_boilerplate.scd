@@ -7,9 +7,9 @@ s.quit;
 // read ServerOptions help file for properties of s.options
 s = Server.local;
 s.options.outDevice_('Built-in Output');
-s.options.numOutputBusChannels_(4);
+s.options.numOutputBusChannels_(4); // outs 0 - 3
 s.options.inDevice_('Built-in Microph');
-s.options.numInputBusChannels_(2);
+s.options.numInputBusChannels_(2); // ins 4-5
 s.options.sampleRate_(44100);
 s.options.memSize_(2.pow(20)); // roughly 1 gig of realtime memory
 s.newBusAllocators;
