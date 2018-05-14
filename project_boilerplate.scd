@@ -93,5 +93,4 @@ s.waitForBoot({
 // **********************************************************************
 
 // create looped synth, not recording
-~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1]);
-thisThread.clock.beats.postln;
+~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
