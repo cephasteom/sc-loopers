@@ -26,12 +26,13 @@ ServerQuit.removeAll;
 TempoClock.default.tempo = 104 / 60;
 ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
 ~synthsPath = ~projectPath++"/synths";
+~midiPath = ~projectPath++"/midi";
 
 // **********************************************************************
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
 ~makeBuffers = {
-	~looper1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
+	~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
 
 };
 
@@ -53,6 +54,11 @@ TempoClock.default.tempo = 104 / 60;
 	~reverbGroup = Group.after(~mainGroup);
 	// define more fx nodes as you need them
 };
+~makeMidi = {
+	MIDIIn.connectAll;
+	e = Dictionary.new;
+	e.add(\controls -> (~midiPath++"/controls.scd").load);
+};
 
 // **********************************************************************
 // 4. REGISTER FUNCTIONS WITH ABSTRACT SERVER ACTION
@@ -67,13 +73,13 @@ ServerQuit.add(~cleanup); // clean up when quit the server
 s.waitForBoot({
 	s.sync; // ensure actions have completed before moving on (synchronous)
 	// 5a. REGISTER SYNTHDEFS
-	(~synthsPath++"/record.scd").load;
-	(~synthsPath++"/play.scd").load;
+	(~synthsPath++"/tapDelay.scd").load;
 	s.sync;
 	// load state
 	(~projectPath++"/data.scd").load;
 	// 5b. CREATE NODES AND EVENTS
 	ServerTree.add(~makeNodes); // delay these until you've created your nodes
+	ServerTree.add(~makeMidi); 
 	s.freeAll;
 	s.sync;
 	s.plotTree;
@@ -86,3 +92,6 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 
+// create looped synth, not recording
+~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1]);
+thisThread.clock.beats.postln;
