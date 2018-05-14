@@ -82,8 +82,8 @@ s.waitForBoot({
 	ServerTree.add(~makeMidi); 
 	s.freeAll;
 	s.sync;
-	s.plotTree;
-	s.meter;
+	// s.plotTree;
+	// s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
 	"Done".postln;
 });
@@ -93,4 +93,4 @@ s.waitForBoot({
 // **********************************************************************
 
 // create looped synth, not recording
-~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
+// ~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);

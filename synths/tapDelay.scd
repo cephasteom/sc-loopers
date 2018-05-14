@@ -1,4 +1,4 @@
-SynthDef(\looper, { |outBus=0, inBus=4, tapBus=2, inMul=1, loopMul=1, loopTime=20, buffer|
+SynthDef(\looper, { |outBus=0, inBus=4, tapBus=2, inMul=1, loopMul=1, loopTime=19, buffer|
     var input, loop, tapPhase, tap;
     input = In.ar(inBus, 1) * inMul;
     loop = InFeedback.ar(2, 1);
@@ -10,7 +10,7 @@ SynthDef(\looper, { |outBus=0, inBus=4, tapBus=2, inMul=1, loopMul=1, loopTime=2
     OffsetOut.ar(outBus, (input + tap)!2)
 }).add;
 
-// x = Synth(\looper, [\buffer, ~looper1, \outBus, ~out, \inBus, ~in1]);
+x = Synth(\looper, [\buffer, ~looper1, \outBus, ~out, \inBus, ~in1]);
 // x.set(\inMul, 0);
 // x.set(\inMul, 1);
 // x.set(\loopTime, 5);
