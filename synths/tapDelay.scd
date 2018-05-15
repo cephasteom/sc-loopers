@@ -11,9 +11,9 @@ SynthDef(\looper, { |outBus=0, inBus=4, inBus2=5, tapBus=2, inMul=1, inMul2=1,lo
     OffsetOut.ar(outBus, (input + input2 + tap)!2)
 }).add;
 
-x = Synth(\looper, [\buffer, ~looper1, \outBus, ~out, \inBus, ~in1, \inBus, ~in2]);
-x.set(\record, 1);
-x.set(\record, 0);
+// x = Synth(\looper, [\buffer, ~looper1, \outBus, ~out, \inBus, ~in1, \inBus, ~in2]);
+// x.set(\record, 1);
+// x.set(\record, 0);
 // x.set(\inMul, 0);
 // x.set(\inMul, 1);
 // x.set(\loopTime, 5);
@@ -21,6 +21,3 @@ x.set(\record, 0);
 // x.set(\loopTime, 1);
 // x.free;
 // b.free;
-
-// inMul probably needs to fade in and out to prevent pops
-// stereo handling

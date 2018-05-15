@@ -33,7 +33,6 @@ TempoClock.default.tempo = 104 / 60;
 // **********************************************************************
 ~makeBuffers = {
 	~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
-
 };
 
 ~makeBusses = {
@@ -85,6 +84,7 @@ s.waitForBoot({
 	// s.plotTree;
 	// s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
+	~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
 	"Done".postln;
 });
 
@@ -93,4 +93,3 @@ s.waitForBoot({
 // **********************************************************************
 
 // create looped synth, not recording
-// ~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
