@@ -1,4 +1,4 @@
-SynthDef(\looper, { |outBus=0, inBus=4, inBus2=5, tapBus=2, inMul=1, inMul2=1,loopMul=1, loopTime=2, record=0, buffer|
+SynthDef(\looper, { |outBus=0, inBus=4, inBus2=5, tapBus=2, inMul=1, inMul2=1,loopMul=1, loopTime=19, record=0, buffer|
     var input, input2, loop, tapPhase, tap;
     input = In.ar(inBus, 1) * inMul;
     input2 = In.ar(inBus2, 1) * inMul2;
