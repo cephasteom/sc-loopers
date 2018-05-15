@@ -5,8 +5,8 @@
 
 MIDIdef.cc(\looperControls, {
 	arg val, chan, src; 
-	// [val, chan, src].postln;
-	if(chan == 0, { // start recording / overdubbing
+	[val, chan, src].postln;
+	if(chan == 45, { // start recording / overdubbing
 		if(~isFirstTime, { 
 			~looperBuf1.zeroMsg(); // clear buffer
 			~startTime = thisThread.clock.beats; // set start time
@@ -17,7 +17,7 @@ MIDIdef.cc(\looperControls, {
 	if(chan == 1, { // stop recording
 		if(~isFirstTime, { // if first loop set loop time
 			~elapsedTime = thisThread.clock.beats - ~startTime;
-			if(~elapsedTime < ~looperBuf1MaxDelay, {~looperSynth1.set(\loopTime, ~elapsedTime)};
+			if(~elapsedTime < ~looperBuf1MaxDelay, { ~looperSynth1.set(\loopTime, ~elapsedTime) } );
 			~isFirstTime = false;
 		});
 		~looperSynth1.set(\record, 0);
@@ -32,4 +32,9 @@ MIDIdef.cc(\looperControls, {
 		~isFirstTime = true; // set flag to start process again on next round
 	}); 
 	if(chan == 6, { ~isFirstTime = true; }); // reset on next record
-})
+});
+
+MIDIdef.cc(\looperControls, {
+	arg val, chan, src; 
+	[val, chan, src].postln;
+});

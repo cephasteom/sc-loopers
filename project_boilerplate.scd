@@ -84,7 +84,7 @@ s.waitForBoot({
 	// s.plotTree;
 	// s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
-	~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
+	// ~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1]);
 	"Done".postln;
 });
 
