@@ -1,11 +1,15 @@
-// TODO: set up with nano controller, ie these channels are just rough...
 ~isFirstTime = true;
 ~startTime;
 ~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
 
+~looperSynth1 = Synth(\looper, 
+	[\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \loopTime, ~looperBuf1MaxDelay-0.1], 
+	~mainGroup
+);
+
 MIDIdef.cc(\looperControls, {
 	arg val, chan, src; 
-	// [val, chan, src].postln;
+	[val, chan, src].postln;
 	// strip note offs
 	if(val > 0, {
 		if(chan == 45, { // start recording / overdubbing
@@ -17,9 +21,9 @@ MIDIdef.cc(\looperControls, {
 		});
 	});
 
-	// if(chan == 2, { ~looperSynth1.set(\inMul, val.linexp(1, 127, 0.0, 1.0)); }); // adjust volume input 1
-	// if(chan == 3, { ~looperSynth1.set(\inMul2, val.linexp(1, 127, 0.0, 1.0)); }); // adjust volume input 2
-	// if(chan == 4, { ~looperSynth1.set(\loopMul, val.linexp(1, 127, 0.0, 1.0)); }); // adjust volume loop
+	if(chan == 0, { ~looperSynth1.set(\inMul, val.linexp(1, 127, 0.001, 1.0)); }); // adjust volume input 1
+	if(chan == 1, { ~looperSynth1.set(\inMul2, val.linexp(1, 127, 0.001, 1.0)); }); // adjust volume input 2
+	if(chan == 2, { ~looperSynth1.set(\loopMul, val.linexp(1, 127, 0.001, 1.0).postln); }); // adjust volume loop
 	// if(chan == 5, { // clear instantly
 	// 	~looperSynth1.set(\record, 0); // if recording stop
 	// 	~looperBuf1.zeroMsg('Buffer cleared'); // clear buffer
@@ -44,12 +48,12 @@ MIDIdef.cc(\looperControls, {
 
 ~punchIn = { 
 	'PunchIn'.postln;
-	~looperSynth1.set(\record, 1) 
+	~looperSynth1.set(\record, 1);
 };
 
 ~punchOut = { 
 	'PunchOut'.postln;
-	~looperSynth1.set(\record, 0) 
+	~looperSynth1.set(\record, 0);
 };
 
 // MIDIdef.freeAll

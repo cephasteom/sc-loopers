@@ -51,7 +51,7 @@ TempoClock.default.tempo = 104 / 60;
 ~makeNodes = {
 	~mainGroup = Group.new;
 	~reverbGroup = Group.after(~mainGroup);
-	~looperSynth1 = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \inMul, 1], ~mainGroup);
+	
 	// define more fx nodes as you need them
 };
 ~makeMidi = {
