@@ -52,10 +52,6 @@ TempoClock.default.tempo = 104 / 60;
 ~makeNodes = {
 	~mainGroup = Group.new;
 	~reverbGroup = Group.after(~mainGroup);
-	~looperSynth1 = Synth(\looper, 
-		[\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \loopTime, ~looperBuf1MaxDelay-0.1], 
-		~mainGroup
-	);
 
 	// define more fx nodes as you need them
 };
@@ -84,7 +80,8 @@ s.waitForBoot({
 	(~projectPath++"/data.scd").load;
 	// 5b. CREATE NODES AND EVENTS
 	ServerTree.add(~makeNodes); // delay these until you've created your nodes
-	ServerTree.add(~makeMidi); 
+	// TODO: add controls back in
+	// ServerTree.add(~makeMidi); 
 	s.freeAll;
 	s.sync;
 	// s.plotTree;
