@@ -33,6 +33,7 @@ TempoClock.default.tempo = 104 / 60;
 // **********************************************************************
 ~makeBuffers = {
 	~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
+	~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
 };
 
 ~makeBusses = {
@@ -51,7 +52,11 @@ TempoClock.default.tempo = 104 / 60;
 ~makeNodes = {
 	~mainGroup = Group.new;
 	~reverbGroup = Group.after(~mainGroup);
-	
+	~looperSynth1 = Synth(\looper, 
+		[\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \loopTime, ~looperBuf1MaxDelay-0.1], 
+		~mainGroup
+	);
+
 	// define more fx nodes as you need them
 };
 ~makeMidi = {

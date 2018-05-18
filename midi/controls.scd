@@ -1,11 +1,5 @@
 ~isFirstTime = true;
 ~startTime;
-~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
-
-~looperSynth1 = Synth(\looper, 
-	[\buffer, ~looperBuf1, \outBus, ~out, \inBus, ~in1, \loopTime, ~looperBuf1MaxDelay-0.1], 
-	~mainGroup
-);
 
 MIDIdef.cc(\looperControls, {
 	arg val, chan, src; 
@@ -21,9 +15,6 @@ MIDIdef.cc(\looperControls, {
 		});
 	});
 
-	if(chan == 0, { ~looperSynth1.set(\inMul, val.linexp(1, 127, 0.001, 1.0)); }); // adjust volume input 1
-	if(chan == 1, { ~looperSynth1.set(\inMul2, val.linexp(1, 127, 0.001, 1.0)); }); // adjust volume input 2
-	if(chan == 2, { ~looperSynth1.set(\loopMul, val.linexp(1, 127, 0.001, 1.0).postln); }); // adjust volume loop
 	// if(chan == 5, { // clear instantly
 	// 	~looperSynth1.set(\record, 0); // if recording stop
 	// 	~looperBuf1.zeroMsg('Buffer cleared'); // clear buffer
