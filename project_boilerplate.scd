@@ -88,7 +88,7 @@ s.waitForBoot({
 	s.freeAll;
 	s.sync;
 	// s.plotTree;
-	// s.meter;
+	s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
 	"Done".postln;
 });
