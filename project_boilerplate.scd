@@ -96,7 +96,7 @@ s.waitForBoot({
 
 // UNCOMMENT TO RUN GUI
 (
-    var synth, win, rec, erase, firstTime, startTime, loopTime,
+    var synth, win, buttons, rec, erase, firstTime, startTime, loopTime,
     col1, col2, col3, row1, row2, row3;
     firstTime=true;
     startTime=0;
@@ -106,38 +106,73 @@ s.waitForBoot({
     // GUI window
     win = Window(\looper, Rect(0, 0, 500, 500), false);
 
-    // recButton
-    rec = Button(win, Rect(col3, row2, 80, 80))
-        .states_([
-            ["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
-            ["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
-        ])
-        .action_({ |bu|
-            if(bu.value == 0, {
-                if(firstTime) {
-                    loopTime = thisThread.clock.beats - startTime; 
-                    synth.set(\loopTime, loopTime);
-                    firstTime = false;
-                };
-                synth.set(\record, 0);
-            });
-            if(bu.value == 1, {
-                if(firstTime) { startTime = thisThread.clock.beats };
-                synth.set(\record, 1)
-            });
-        });
-    // erase
-    erase = Button(win, Rect(col3, row3, 80, 80))
-        .states_([
-            ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
-        ])
-        .action_({ arg bu;
-            rec.valueAction = 0;
-            synth.set(\loopTime, 19.9);
-            // TODO: make all of this a function and pass it on
-            ~looperBuf1.zero(); // clear buffer
-            firstTime = true;
+    buttons = [rec, erase];
+    buttons = buttons.collect({|button, i| Button(win, Rect((80+(i*90)), row2, 80, 80))});
+
+    // rec button
+	buttons[0].states_([
+		["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
+		["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
+    ])
+	.action_({ |bu|
+		if(bu.value == 0, {
+	        if(firstTime) {
+	            loopTime = thisThread.clock.beats - startTime; 
+	            synth.set(\loopTime, loopTime);
+	            firstTime = false;
+	        };
+            synth.set(\record, 0);
         });
+		if(bu.value == 1, {
+            if(firstTime) { startTime = thisThread.clock.beats };
+            synth.set(\record, 1)
+        });
+	});
+
+	// erase button
+	buttons[1].states_([
+        ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
+    ])
+    .action_({ arg bu;
+        buttons[0].valueAction = 0;
+        synth.set(\loopTime, 19.9);
+        // TODO: make all of this a function and pass it on
+        ~looperBuf1.zero(); // clear buffer
+        firstTime = true;
+    });
+    
+//     // recButton
+//     rec = Button(win, Rect(col3, row2, 80, 80))
+//         .states_([
+//             ["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
+//             ["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
+//         ])
+//         .action_({ |bu|
+//             if(bu.value == 0, {
+//                 if(firstTime) {
+//                     loopTime = thisThread.clock.beats - startTime; 
+//                     synth.set(\loopTime, loopTime);
+//                     firstTime = false;
+//                 };
+//                 synth.set(\record, 0);
+//             });
+//             if(bu.value == 1, {
+//                 if(firstTime) { startTime = thisThread.clock.beats };
+//                 synth.set(\record, 1)
+//             });
+//         });
+//     // erase
+//     erase = Button(win, Rect(col3, row3, 80, 80))
+//         .states_([
+//             ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
+//         ])
+//         .action_({ arg bu;
+//             rec.valueAction = 0;
+//             synth.set(\loopTime, 19.9);
+//             // TODO: make all of this a function and pass it on
+//             ~looperBuf1.zero(); // clear buffer
+//             firstTime = true;
+//         });
 
 
     // input1 slider
