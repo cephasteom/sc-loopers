@@ -109,8 +109,8 @@ s.waitForBoot({
     // recButton
     rec = Button(win, Rect(col3, row2, 80, 80))
         .states_([
-            ["rec", Color.black, Color.grey],
-            ["recording", Color.black, Color.red],
+            ["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
+            ["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
         ])
         .action_({ |bu|
             if(bu.value == 0, {
@@ -129,7 +129,7 @@ s.waitForBoot({
     // erase
     erase = Button(win, Rect(col3, row3, 80, 80))
         .states_([
-            ["clear", Color.black, Color.rand],
+            ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
         ])
         .action_({ arg bu;
             rec.valueAction = 0;
@@ -138,6 +138,7 @@ s.waitForBoot({
             ~looperBuf1.zero(); // clear buffer
             firstTime = true;
         });
+
 
     // input1 slider
     StaticText(win, Rect(col1, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("1");
