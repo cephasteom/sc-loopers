@@ -100,7 +100,7 @@ s.waitForBoot({
     // synth
     synth = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out]);
     // GUI window
-    win = Window(\looper, Rect(0, 0, 300, 180), false);
+    win = Window(\looper, Rect(0, 0, 295, 180), false);
 
     // create buttons
     buttons = 0!(cols*rows);
@@ -172,13 +172,11 @@ s.waitForBoot({
 
     // input1 slider
     sliders[0]
-        .action_({|in1| synth.set(\in1Mul, [0.0001, 1.2, \exp].asSpec.map(in1.value)) })
-        .value = 1;
+        .action_({|in1| synth.set(\in1Mul, [0.0001, 1.1, \exp].asSpec.map(in1.value)) });
 	
     // input2 slider
     sliders[1]
-        .action_({|in2| synth.set(\in2Mul, [0.0001, 1.2, \exp].asSpec.map(in2.value)) })
-        .value = 1;
+        .action_({|in2| synth.set(\in2Mul, [0.0001, 1.1, \exp].asSpec.map(in2.value)) });
 
 	// input3 slider TODO
 
@@ -194,6 +192,8 @@ s.waitForBoot({
 			sliders[3].value = right.value;
 		});		
 
+	// init all sliders to 0db (0.9)
+	sliders.collect({|slider| slider.value = 0.9});
 
     win.onClose_({synth.free}).front;
 )
