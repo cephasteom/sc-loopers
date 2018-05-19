@@ -96,51 +96,69 @@ s.waitForBoot({
 
 // UNCOMMENT TO RUN GUI
 (
-    var synth, win, buttons, firstTime, startTime, loopTime, cols, rows, bsize;
-    firstTime=true;
-    startTime=0;
-    cols = 2; rows = 2;
-    bsize = 80;
+    var synth, win, buttons, firstTime=true, startTime=0, loopTime, cols=2, rows=2, bsize=80;
     // synth
     synth = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out]);
     // GUI window
-    win = Window(\looper, Rect(0, 0, 500, 500), false);
+    win = Window(\looper, Rect(0, 0, 250, 165), false);
 
-    buttons = [0,1,2,3];
-    buttons = buttons.collect({|i| Button(win, Rect((i % cols) * bsize, trunc(i/cols) * bsize, bsize, bsize))});
+    buttons = 0!(cols*rows);
+    buttons = buttons
+    	.collect({|item, i| Button(win, Rect((i % cols) * bsize  + 5, trunc(i/cols) * bsize + 5, bsize-5, bsize-5))});
 
     // rec button
-	buttons[0].states_([
-		["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
-		["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
-    ])
-	.action_({ |bu|
-		if(bu.value == 0, {
-	        if(firstTime) {
-	            loopTime = thisThread.clock.beats - startTime; 
-	            synth.set(\loopTime, loopTime);
-	            firstTime = false;
-	        };
-            synth.set(\record, 0);
-        });
-		if(bu.value == 1, {
-            if(firstTime) { startTime = thisThread.clock.beats };
-            synth.set(\record, 1)
-        });
-	});
+	buttons[0]
+		.states_([
+			["O", Color.grey, Color.new(136/255, 80/255, 83/255)],
+			["O", Color.grey, Color.new(254/255, 95/255, 85/255)],
+	    ])
+		.action_({ |bu|
+			if(bu.value == 0, {
+		        if(firstTime) {
+		            loopTime = thisThread.clock.beats - startTime; 
+		            synth.set(\loopTime, loopTime);
+		            firstTime = false;
+		        };
+	            synth.set(\record, 0);
+	        });
+			if(bu.value == 1, {
+	            if(firstTime) { startTime = thisThread.clock.beats };
+	            synth.set(\record, 1)
+	        });
+		});
 
 	// erase button
-	buttons[1].states_([
-        ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
-    ])
-    .action_({ arg bu;
-        buttons[0].valueAction = 0;
-        synth.set(\loopTime, 19.9);
-        // TODO: make all of this a function and pass it on
-        ~looperBuf1.zero(); // clear buffer
-        firstTime = true;
-    });
+	buttons[1]
+		.states_([
+	        ["X", Color.grey, Color.new(198/255, 236/255, 174/255)],
+	    ])
+	    .action_({ arg bu;
+	        buttons[0].valueAction = 0;
+	        synth.set(\loopTime, 19.9);
+	        // TODO: make all of this a function and pass it on
+	        ~looperBuf1.zero(); // clear buffer
+	        firstTime = true;
+	    });
 
+    // play/pause button
+	buttons[2]
+		.states_([
+	        ["||", Color.grey, Color.new(148/255, 201/255, 169/255)],
+	        [">", Color.grey, Color.new(148/255, 201/255, 169/255, 0.5)],
+	    ])
+	    .action_({ arg bu;
+
+	    });
+
+    // oct button
+	buttons[3]
+		.states_([
+	        ["-", Color.grey, Color.new(119/255, 125/255, 167/255)],
+	        ["+", Color.grey, Color.new(119/255, 125/255, 167/255, 0.5)],
+	    ])
+	    .action_({ arg bu;
+
+	    });
 
     // // input1 slider
     // StaticText(win, Rect(col1, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("1");
