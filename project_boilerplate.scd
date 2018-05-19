@@ -96,18 +96,18 @@ s.waitForBoot({
 
 // UNCOMMENT TO RUN GUI
 (
-    var synth, win, buttons, rec, erase, firstTime, startTime, loopTime,
-    col1, col2, col3, row1, row2, row3;
+    var synth, win, buttons, firstTime, startTime, loopTime, cols, rows, bsize;
     firstTime=true;
     startTime=0;
-    col1 = 20; col2=50; col3=80; row1 = 20; row2 = 30; row3 = 120;
+    cols = 2; rows = 2;
+    bsize = 80;
     // synth
     synth = Synth(\looper, [\buffer, ~looperBuf1, \outBus, ~out]);
     // GUI window
     win = Window(\looper, Rect(0, 0, 500, 500), false);
 
-    buttons = [rec, erase];
-    buttons = buttons.collect({|button, i| Button(win, Rect((80+(i*90)), row2, 80, 80))});
+    buttons = [0,1,2,3];
+    buttons = buttons.collect({|i| Button(win, Rect((i % cols) * bsize, trunc(i/cols) * bsize, bsize, bsize))});
 
     // rec button
 	buttons[0].states_([
@@ -140,48 +140,15 @@ s.waitForBoot({
         ~looperBuf1.zero(); // clear buffer
         firstTime = true;
     });
-    
-//     // recButton
-//     rec = Button(win, Rect(col3, row2, 80, 80))
-//         .states_([
-//             ["rec", Color.black, Color.new(136/255, 80/255, 83/255)],
-//             ["recording", Color.black, Color.new(254/255, 95/255, 85/255)],
-//         ])
-//         .action_({ |bu|
-//             if(bu.value == 0, {
-//                 if(firstTime) {
-//                     loopTime = thisThread.clock.beats - startTime; 
-//                     synth.set(\loopTime, loopTime);
-//                     firstTime = false;
-//                 };
-//                 synth.set(\record, 0);
-//             });
-//             if(bu.value == 1, {
-//                 if(firstTime) { startTime = thisThread.clock.beats };
-//                 synth.set(\record, 1)
-//             });
-//         });
-//     // erase
-//     erase = Button(win, Rect(col3, row3, 80, 80))
-//         .states_([
-//             ["clear", Color.black, Color.new(119/255, 125/255, 167/255)],
-//         ])
-//         .action_({ arg bu;
-//             rec.valueAction = 0;
-//             synth.set(\loopTime, 19.9);
-//             // TODO: make all of this a function and pass it on
-//             ~looperBuf1.zero(); // clear buffer
-//             firstTime = true;
-//         });
 
 
-    // input1 slider
-    StaticText(win, Rect(col1, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("1");
-    Slider(win, Rect(col1, row2, 20, 170))
-        .action_({|in1| synth.set(\in1Mul, [0.0001, 1, \exp].asSpec.map(in1.value)) });
-    // input2 slider
-    StaticText(win, Rect(col2, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("2");
-    Slider(win, Rect(col2, row2, 20, 170)) 
-        .action_({|in2| synth.set(\in2Mul, [0.0001, 1, \exp].asSpec.map(in2.value)) });
+    // // input1 slider
+    // StaticText(win, Rect(col1, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("1");
+    // Slider(win, Rect(col1, row2, 20, 170))
+    //     .action_({|in1| synth.set(\in1Mul, [0.0001, 1, \exp].asSpec.map(in1.value)) });
+    // // input2 slider
+    // StaticText(win, Rect(col2, row1, 10, 10)).font_(Font("Helvetica", 10)).string_("2");
+    // Slider(win, Rect(col2, row2, 20, 170)) 
+    //     .action_({|in2| synth.set(\in2Mul, [0.0001, 1, \exp].asSpec.map(in2.value)) });
     win.onClose_({synth.free}).front;
 )
