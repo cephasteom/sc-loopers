@@ -172,11 +172,13 @@ s.waitForBoot({
 
     // input1 slider
     sliders[0]
-        .action_({|in1| synth.set(\in1Mul, [0.0001, 1, \exp].asSpec.map(in1.value)) });
+        .action_({|in1| synth.set(\in1Mul, [0.0001, 1.2, \exp].asSpec.map(in1.value)) })
+        .value = 1;
 	
     // input2 slider
     sliders[1]
-        .action_({|in2| synth.set(\in2Mul, [0.0001, 1, \exp].asSpec.map(in2.value)) });
+        .action_({|in2| synth.set(\in2Mul, [0.0001, 1.2, \exp].asSpec.map(in2.value)) })
+        .value = 1;
 
 	// input3 slider TODO
 
