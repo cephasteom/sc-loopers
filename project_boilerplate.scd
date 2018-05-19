@@ -157,7 +157,7 @@ s.waitForBoot({
 	        [">", Color.grey(0.2), Color.new(148/255, 201/255, 169/255, 0.5)],
 	    ])
 	    .action_({ arg bu;
-
+	    	 // TODO
 	    });
 
     // oct button
@@ -167,7 +167,7 @@ s.waitForBoot({
 	        ["+", Color.grey(0.2), Color.new(119/255, 125/255, 167/255, 0.5)],
 	    ])
 	    .action_({ arg bu;
-
+	    	// TODO
 	    });
 
     // input1 slider
@@ -184,7 +184,13 @@ s.waitForBoot({
 	sliders[3]
 		.action_({|left| 
 			synth.set(\outMul, [0.0001, 1, \exp].asSpec.map(left.value));
+			sliders[4].value = left.value;
 		});
+	sliders[4]
+		.action_({|right| 
+			synth.set(\outMul, [0.0001, 1, \exp].asSpec.map(right.value));
+			sliders[3].value = right.value;
+		});		
 
 
     win.onClose_({synth.free}).front;
