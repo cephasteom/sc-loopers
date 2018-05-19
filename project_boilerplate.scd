@@ -21,6 +21,7 @@ ServerQuit.removeAll;
 // 2. INIT GLOBAL VARIABLES
 // **********************************************************************
 ~out = 0;
+~tapBus1 = 2;
 ~in1 = 4; 
 ~in2 = 5; 
 TempoClock.default.tempo = 104 / 60;
@@ -33,29 +34,12 @@ TempoClock.default.tempo = 104 / 60;
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
 ~makeBuffers = {
-	~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
-	~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
+	~looper1Buf = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
 };
-
-~makeBusses = {
-	~busses = Dictionary.new;
-	~busses.add(\reverb -> Bus.audio(s, 2));
-	// add more busses as you need them
-};
-
-~cleanup = {
-	s.newBusAllocators;
-	ServerBoot.removeAll;
-	ServerTree.removeAll;
-	ServerQuit.removeAll;
-};
-
-~makeNodes = {
-	// ~mainGroup = Group.new;
-	// ~reverbGroup = Group.after(~mainGroup);
-
-	// define more fx nodes as you need them
-};
+// ~makeBusses = {
+// 	~busses = Dictionary.new;
+// 	~busses.add(\tapBus1 -> Bus.audio(s, 1));
+// };
 ~makeGui = {
 	// MIDIIn.connectAll
 	g = Dictionary.new;
@@ -67,38 +51,38 @@ TempoClock.default.tempo = 104 / 60;
 	e = Dictionary.new;
 	e.add(\controls -> (~midiPath++"/controls.scd").load);
 };
+~cleanup = {
+	s.newBusAllocators;
+	ServerBoot.removeAll;
+	ServerTree.removeAll;
+	ServerQuit.removeAll;
+};
 
 // **********************************************************************
 // 4. REGISTER FUNCTIONS WITH ABSTRACT SERVER ACTION
 // **********************************************************************
-ServerBoot.add(~makeBuffers); // make ~buffers
-ServerBoot.add(~makeBusses); // make ~busses
+ServerBoot.add(~makeBuffers); 
+// ServerBoot.add(~makeBusses);
 ServerQuit.add(~cleanup); // clean up when quit the server
 
 // **********************************************************************
 // 5. BOOT SERVER
 // **********************************************************************
 s.waitForBoot({
-	s.sync; // ensure actions have completed before moving on (synchronous)
-	// 5a. REGISTER SYNTHDEFS
+	s.sync;
+	// synths
 	(~synthsPath++"/tapDelay.scd").load;
 	s.sync;
-	// load state
-	(~projectPath++"/data.scd").load;
-	// 5b. CREATE NODES AND EVENTS
-	ServerTree.add(~makeNodes); // delay these until you've created your nodes
+	// nodes
+	ServerTree.add(~makeNodes);
+	// events/midi/guis
 	ServerTree.add(~makeGui); 
-	// TODO: add controls back in
 	// ServerTree.add(~makeMidi); 
-	s.freeAll;
-	s.sync;
-	// s.plotTree;
-	s.meter;
-	// 5c. NOW READY TO BEGIN PERFORMANCE
-	"Done".postln;
+	s.freeAll; s.sync; s.meter;
+	"loaded".postln;
 });
 
 // **********************************************************************
 // 6. PERFORMANCE
 // **********************************************************************
-g[\looperGui].value(~looperBuf1);
+// g[\looperGui].value(~looper1Buf, ~out, ~in1, ~in2, ~tapBus1);

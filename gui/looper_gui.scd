@@ -1,9 +1,18 @@
 (
-	{|buffer|
+	{|buffer, out, in1, in2, tapBus|
 
 	    var synth, win, buttons, sliders, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80;
 	    // synth
-	    synth = Synth(\looper, [\buffer, buffer, \outBus, ~out, \loopTime, (buffer.numFrames / buffer.sampleRate) -0.1]);
+	    synth = Synth(\looper, 
+	    	[
+		    	\buffer, buffer, 
+		    	\outBus, out, 
+		    	\inBus, in1, 
+		    	\inBus2, in2, 
+		    	\tapBus, tapBus,
+		    	\loopTime, (buffer.numFrames / buffer.sampleRate) -0.1
+	    	]
+	    );
 	    // GUI window
 	    win = Window(\looper, Rect(0, 0, 295, 180), false);
 
