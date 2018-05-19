@@ -1,4 +1,4 @@
-SynthDef(\looper, { |outBus=0, inBus=0, inBus2=1, in1Mul=1, in2Mul=1, tapBus=2, loopTime=19.9, record=0, buffer|
+SynthDef(\looper, { |outBus=0, inBus=0, inBus2=1, in1Mul=1, in2Mul=1, outMul=1, tapBus=2, loopTime=19.9, record=0, buffer|
     var input, input2, loop, tapPhase, tap;
     input = SoundIn.ar(inBus, in1Mul);
     input2 = SoundIn.ar(inBus2, in2Mul);
@@ -8,7 +8,7 @@ SynthDef(\looper, { |outBus=0, inBus=0, inBus2=1, in1Mul=1, in2Mul=1, tapBus=2, 
     // tap output
     OffsetOut.ar(tapBus, DelayC.ar(tap, 1, 440.reciprocal - ControlRate.ir.reciprocal));
     // main output
-    OffsetOut.ar(outBus, (input + input2 + tap!2));
+    OffsetOut.ar(outBus, (input + input2 + tap!2) * outMul);
 }).add;
 
 
