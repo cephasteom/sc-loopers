@@ -9,7 +9,7 @@ s = Server.local;
 s.options.outDevice_('Built-in Output');
 s.options.numOutputBusChannels_(4); // outs 0 - 3
 s.options.inDevice_('Built-in Microph');
-s.options.numInputBusChannels_(2); // ins 4-5
+s.options.numInputBusChannels_(2); // ins 4-5 (or 1... if using SoundIn.ar)
 s.options.sampleRate_(44100);
 s.options.memSize_(2.pow(20)); // roughly 1 gig of realtime memory
 s.newBusAllocators;
@@ -20,10 +20,9 @@ ServerQuit.removeAll;
 // **********************************************************************
 // 2. INIT GLOBAL VARIABLES
 // **********************************************************************
+// outs
 ~out = 0;
-~in1 = 4; 
-~in2 = 5; 
-TempoClock.default.tempo = 104 / 60;
+~tapBus1 = 2;
 ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
 ~synthsPath = ~projectPath++"/synths";
 ~midiPath = ~projectPath++"/midi";
@@ -101,4 +100,5 @@ s.waitForBoot({
 // **********************************************************************
 // 6. PERFORMANCE
 // **********************************************************************
-// g[\looperGui].value(~looperBuf1);
+// args buffer, in1, in2, out, tapBus
+// g[\looperGui].value(~looperBuf1, 0, 1, ~out, ~tapBus1);
