@@ -1,7 +1,17 @@
 (
 	{|buffer, in1, in2, out, tapBus|
 
-	    var synth, win, buttons, sliders, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80;
+	    var synth, win, buttons, sliders, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc;
+	    // manually fade on certain actions to avoid pops
+	    fadeFunc = {|from, to, dur, syn, param|
+	    	var fade;
+			{fade = Env([from,to],[dur]).asStream;
+    		1000.do({
+    			syn.set(param, fade.next);
+    			(dur/1000).wait;
+    		})}.fork;
+	    };
+	    
 	    // synth
 	    synth = Synth(\looper, 
 	    	[\buffer, buffer, \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, (buffer.numFrames / buffer.sampleRate) -0.1]
@@ -50,10 +60,16 @@
 		        ["x", Color.grey(0.2), Color.new(198/255, 236/255, 174/255)],
 		    ])
 		    .action_({ arg bu;
-		        buttons[0].valueAction = 0;
-		        synth.set(\loopTime, 19.9);
-		        buffer.zero(); // clear buffer
-		        firstTime = true;
+		    	Task({
+			        buttons[0].valueAction = 0;
+			        buttons[2].value.postln;
+			        fadeFunc.value(1,0,0.01, synth, \outMul); // fade out to avoid pops
+			        0.02.wait;
+			        synth.set(\loopTime, 19.9);
+			        buffer.zero(); // clear buffer
+			        fadeFunc.value(0,1,0.01, synth, \outMul); // fade in to avoid pops
+			        firstTime = true;
+		    	}).start(AppClock);
 		    });
 
 	    // play/pause button
@@ -63,8 +79,10 @@
 		        [">", Color.grey(0.2), Color.new(148/255, 201/255, 169/255, 0.5)],
 		    ])
 		    .action_({ arg bu;
-		    	if(bu.value == 0, { synth.set(\outMul, 1) });
-		    	if(bu.value == 1, { synth.set(\outMul, 0) });
+		    	if(bu.value == 0, {
+		    		fadeFunc.value(0,1,0.001,synth,\outMul) });
+		    	if(bu.value == 1, { 
+		    		fadeFunc.value(1,0,0.001,synth,\outMul) });
 		    });
 
 	    // oct button
