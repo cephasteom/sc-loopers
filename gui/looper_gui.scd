@@ -63,7 +63,8 @@
 		        [">", Color.grey(0.2), Color.new(148/255, 201/255, 169/255, 0.5)],
 		    ])
 		    .action_({ arg bu;
-		    	 // TODO
+		    	if(bu.value == 0, { synth.set(\outMul, 1) });
+		    	if(bu.value == 1, { synth.set(\outMul, 0) });
 		    });
 
 	    // oct button
