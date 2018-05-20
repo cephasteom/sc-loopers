@@ -1,3 +1,7 @@
+// TODO: reset controls:
+// record - to no record, always play
+// clear - always reset each control
+
 s.quit;
 
 // **********************************************************************
@@ -101,6 +105,6 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 // args buffer, in1, in2, out, tapBus
-// g[\looperGui].value(~looperBuf1, 0, 1, ~out, ~tapBus1);
+g[\looperGui].value(~looperBuf1, 0, 1, ~out, ~tapBus1);
 
 
