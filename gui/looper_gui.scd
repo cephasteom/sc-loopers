@@ -14,7 +14,7 @@
 	    
 	    // synth
 	    synth = Synth(\looper, 
-	    	[\buffer, Buffer.alloc(s, 44100 * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9]
+	    	[\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9]
 	    );
 	    // GUI window
 	    win = Window(\looper, Rect(0, 0, 295, 180), false);
@@ -46,11 +46,11 @@
 			            synth.set(\loopTime, loopTime);
 			            firstTime = false;
 			        };
-		            synth.set(\record, 0);
+			        fadeFunc.value(1,0,0.05, synth, \record); // fade out to avoid pops
 		        });
 				if(bu.value == 1, {
 		            if(firstTime) { startTime = thisThread.clock.beats };
-		            synth.set(\record, 1)
+		            fadeFunc.value(0,1,0.05, synth, \record); // fade in to avoid pops
 		        });
 			});
 
@@ -61,11 +61,11 @@
 		    ])
 		    .action_({ arg bu;
 		    	Task({
-			        buttons[0].valueAction = 0;
+			        buttons[0].value = 0;
 			        fadeFunc.value(1,0.0001,0.05, synth, \outMul); // fade out to avoid pops
 			        0.1.wait;
-			        synth.set(\buffer, Buffer.alloc(s, 44100 * 20, 1));
-			        fadeFunc.value(0.0001,1,0.1, synth, \outMul); // fade in to avoid pops
+			        synth.set(\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \record, 0, \loopTime, 19.9);
+			        fadeFunc.value(0.0,1,0.05, synth, \outMul); // fade in to avoid pops
 			        firstTime = true;
 		    	}).start(AppClock);
 		    });
