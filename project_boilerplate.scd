@@ -7,11 +7,12 @@ s.quit;
 // read ServerOptions help file for properties of s.options
 s = Server.local;
 // s.options.outDevice_('Built-in Output'); // home
-s.options.device = 'DN32-USB'; // studio
-s.options.numOutputBusChannels_(4); // outs 0 - 3
 // s.options.inDevice_('Built-in Microph'); // home
-s.options.inDevice_('DN32-USB'); // studio
-s.options.numInputBusChannels_(2); // ins 4-5 (or 1... if using SoundIn.ar)
+s.options.device = "DN32-USB"; // studio
+// s.options.numOutputBusChannels_(4); // outs 0 - 3 home
+s.options.numOutputBusChannels_(8); // outs 0 - 3 studio
+// s.options.numInputBusChannels_(2); // ins 4-5 (or 1... if using SoundIn.ar) home
+s.options.numInputBusChannels_(8); // ins 4-5 (or 1... if using SoundIn.ar) studio
 s.options.sampleRate_(48000);
 s.options.memSize_(2.pow(20)); // roughly 1 gig of realtime memory
 s.newBusAllocators;
@@ -35,8 +36,8 @@ ServerQuit.removeAll;
 // 3. DEFINE PIECE SPECIFIC FUNCTIONS
 // **********************************************************************
 ~makeBuffers = {
-	~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
-	~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
+	// ~looperBuf1 = Buffer.alloc(s, 44100 * 20, 1); // a 20 second 1 channel Buffer
+	// ~looperBuf1MaxDelay = ~looperBuf1.numFrames / ~looperBuf1.sampleRate;
 };
 
 ~makeBusses = {
@@ -103,7 +104,7 @@ s.waitForBoot({
 // **********************************************************************
 // 6. PERFORMANCE
 // **********************************************************************
-// args buffer, in1, in2, out, tapBus
-// g[\looperGui].value(~looperBuf1, 0, 1, ~out, ~tapBus1);
+// args in1, in2, out, tapBus
+// g[\looperGui].value(0, 1, ~out, ~tapBus1);
 
 

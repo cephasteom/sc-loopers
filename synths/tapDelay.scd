@@ -8,7 +8,5 @@ SynthDef(\looper, { |outBus=0, inBus=0, inBus2=1, in1Mul=1, in2Mul=1, outMul=1, 
     // tap output
     OffsetOut.ar(tapBus, DelayC.ar(tap, 1, 440.reciprocal - ControlRate.ir.reciprocal));
     // main output
-    OffsetOut.ar(outBus, ( input + input2 + (tap*outMul)!2) );
+    OffsetOut.ar(outBus, tap*outMul!2);
 }).add;
-
-

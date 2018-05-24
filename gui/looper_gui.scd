@@ -1,5 +1,5 @@
 (
-	{|buffer, in1, in2, out, tapBus|
+	{|in1, in2, out, tapBus|
 
 	    var synth, win, buttons, sliders, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc;
 	    // manually fade on certain actions to avoid pops
@@ -14,7 +14,7 @@
 	    
 	    // synth
 	    synth = Synth(\looper, 
-	    	[\buffer, buffer, \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, (buffer.numFrames / buffer.sampleRate) -0.1]
+	    	[\buffer, Buffer.alloc(s, 44100 * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9]
 	    );
 	    // GUI window
 	    win = Window(\looper, Rect(0, 0, 295, 180), false);
@@ -62,12 +62,10 @@
 		    .action_({ arg bu;
 		    	Task({
 			        buttons[0].valueAction = 0;
-			        buttons[2].value.postln;
-			        fadeFunc.value(1,0,0.01, synth, \outMul); // fade out to avoid pops
-			        0.02.wait;
-			        synth.set(\loopTime, 19.9);
-			        buffer.zero(); // clear buffer
-			        fadeFunc.value(0,1,0.01, synth, \outMul); // fade in to avoid pops
+			        fadeFunc.value(1,0.0001,0.05, synth, \outMul); // fade out to avoid pops
+			        0.1.wait;
+			        synth.set(\buffer, Buffer.alloc(s, 44100 * 20, 1));
+			        fadeFunc.value(0.0001,1,0.1, synth, \outMul); // fade in to avoid pops
 			        firstTime = true;
 		    	}).start(AppClock);
 		    });
