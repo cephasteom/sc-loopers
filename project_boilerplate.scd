@@ -6,11 +6,13 @@ s.quit;
 
 // read ServerOptions help file for properties of s.options
 s = Server.local;
-s.options.outDevice_('Built-in Output');
+// s.options.outDevice_('Built-in Output'); // home
+s.options.device = 'DN32-USB'; // studio
 s.options.numOutputBusChannels_(4); // outs 0 - 3
-s.options.inDevice_('Built-in Microph');
+// s.options.inDevice_('Built-in Microph'); // home
+s.options.inDevice_('DN32-USB'); // studio
 s.options.numInputBusChannels_(2); // ins 4-5 (or 1... if using SoundIn.ar)
-s.options.sampleRate_(44100);
+s.options.sampleRate_(48000);
 s.options.memSize_(2.pow(20)); // roughly 1 gig of realtime memory
 s.newBusAllocators;
 ServerBoot.removeAll;
@@ -23,7 +25,8 @@ ServerQuit.removeAll;
 // outs
 ~out = 0;
 ~tapBus1 = 2;
-~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers";
+// ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers"; // home
+~projectPath = "/Users/petethomas/code/project_loopers"; // studio
 ~synthsPath = ~projectPath++"/synths";
 ~midiPath = ~projectPath++"/midi";
 ~guiPath = ~projectPath++"/gui";
