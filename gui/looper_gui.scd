@@ -1,7 +1,7 @@
 (
 	{|in1, in2, out, tapBus|
 
-	    var synth, win, buttons, sliders, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc;
+	    var synth, win, buttons, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc, isMute=false;
 	    // manually fade on certain actions to avoid pops
 	    fadeFunc = {|from, to, dur, syn, param|
 	    	var fade;
@@ -17,21 +17,13 @@
 	    	[\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9]
 	    );
 	    // GUI window
-	    win = Window(\looper, Rect(0, 0, 295, 180), false);
+	    win = Window(\looper, Rect(0, 0, 165, 165), false);
 
 	    // create buttons
 	    buttons = 0!(cols*rows);
 	    buttons = buttons
 	    	.collect({|item, i| Button(win, Rect((i % cols) * size  + 5, trunc(i/cols) * size + 5, size-5, size-5))});
 
-	    // create sliders
-	    sliders = 0!5;
-	    sliders = sliders
-	    	.collect({|item, i| Slider(win, Rect((size*cols)+5+(i*25), 5, 20, (size*2-5)))});
-
-	    // create slider labels
-	    labels = ["1", "2", "Lp", "L", "R"]
-	    	.collect({|item, i| StaticText(win, Rect((size*cols)+12+(i*25), (size*2), 20, 20)).font_(Font("Helvetica", 10)).string_(item) });
 
 	    // rec button
 		buttons[0]
@@ -62,7 +54,9 @@
 		    .action_({ arg bu;
 		    	Task({
 			        buttons[0].value = 0;
-			        fadeFunc.value(1,0.0001,0.05, synth, \outMul); // fade out to avoid pops
+			        buttons[2].value = 0;
+			        buttons[3].value = 0;
+			        if(isMute == false, {fadeFunc.value(1,0.0001,0.05, synth, \outMul)}); // fade out to avoid pops
 			        0.1.wait;
 			        synth.set(\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \record, 0, \loopTime, 19.9);
 			        fadeFunc.value(0.0,1,0.05, synth, \outMul); // fade in to avoid pops
@@ -78,9 +72,13 @@
 		    ])
 		    .action_({ arg bu;
 		    	if(bu.value == 0, {
-		    		fadeFunc.value(0,1,0.001,synth,\outMul) });
+		    		fadeFunc.value(0,1,0.001,synth,\outMul);
+		    		isMute = false;
+		    	});
 		    	if(bu.value == 1, { 
-		    		fadeFunc.value(1,0,0.001,synth,\outMul) });
+		    		fadeFunc.value(1,0,0.001,synth,\outMul);
+		    		isMute = true; 
+		    	});
 		    });
 
 	    // oct button
@@ -93,30 +91,6 @@
 		    	// TODO
 		    });
 
-	    // input1 slider
-	    sliders[0]
-	        .action_({|in1| synth.set(\in1Mul, [0.0001, 1.1, \exp].asSpec.map(in1.value)) });
-		
-	    // input2 slider
-	    sliders[1]
-	        .action_({|in2| synth.set(\in2Mul, [0.0001, 1.1, \exp].asSpec.map(in2.value)) });
-
-		// input3 slider TODO
-
-		// LR Slider
-		sliders[3]
-			.action_({|left| 
-				synth.set(\outMul, [0.0001, 1, \exp].asSpec.map(left.value));
-				sliders[4].value = left.value;
-			});
-		sliders[4]
-			.action_({|right| 
-				synth.set(\outMul, [0.0001, 1, \exp].asSpec.map(right.value));
-				sliders[3].value = right.value;
-			});		
-
-		// init all sliders to 0db (0.9)
-		sliders.collect({|slider| slider.value = 0.9});
 
 	    win.onClose_({synth.free}).front;
 	}
