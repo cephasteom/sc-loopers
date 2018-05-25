@@ -104,7 +104,7 @@ s.waitForBoot({
 	// ServerTree.add(~makeMidi); 
 	s.freeAll;
 	s.sync;
-	// s.plotTree;
+	s.plotTree;
 	// s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
 	"Done".postln;
@@ -113,7 +113,5 @@ s.waitForBoot({
 // **********************************************************************
 // 6. PERFORMANCE
 // **********************************************************************
-// args in1, in2, out, tapBus
-// Buffer.freeAll;
-// g[\looperGui].value(0, 1, ~out, ~tapBus1);
+// args in, out
 g[\looperGui2].value(0, 0);

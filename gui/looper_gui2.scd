@@ -1,17 +1,8 @@
 (
 	{|in=0, out=0|
 
-	    var synth, win, buttons, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc, isMute=false, buffer, task;
-	    // manually fade on certain actions to avoid pops
-	    s.meter;
-	  //   fadeFunc = {|from, to, dur, syn, param|
-	  //   	var fade;
-			// {fade = Env([from,to],[dur]).asStream;
-   //  		1000.do({
-   //  			syn.set(param, fade.next);
-   //  			(dur/1000).wait;
-   //  		})}.fork;
-	  //   };
+	    var synth, win, buttons, firstTime=true, startTime=0, loopTime, isMute=false, buffer, task,
+	    cols=2, rows=2, size=80;
 	    
 	    // GUI window
 	    win = Window(\looper, Rect(0, 0, 165, 165), false);
@@ -31,6 +22,7 @@
 				if(bu.value == 0, {
 			        if(firstTime) {
 			            loopTime = thisThread.clock.beats - startTime; 
+			            if (loopTime > 20, {loopTime = 19.9}); // max loop time exceeded
 			            task = Task({{ synth.set(\t_reset, 1); loopTime.wait}.loop }).start;
 			            firstTime = false;
 			        };
@@ -92,7 +84,6 @@
 			    	task = Task({{ synth.set(\t_reset, 1); (loopTime*2).wait}.loop }).start;
 			    }); 
 		    });
-
 
 	    win.onClose_({synth.free; buffer.free; task.stop}).front;
 	}
