@@ -76,17 +76,24 @@
 			    }); 
 		    });
 
-	 //    // oct button
-		// buttons[3]
-		// 	.states_([
-		//         ["-", Color.grey(0.2), Color.new(119/255, 125/255, 167/255)],
-		//         ["+", Color.grey(0.2), Color.new(119/255, 125/255, 167/255, 0.5)],
-		//     ])
-		//     .action_({ arg bu;
-		//     	// TODO
-		//     });
+	    // oct button
+		buttons[3]
+			.states_([
+		        ["-", Color.grey(0.2), Color.new(119/255, 125/255, 167/255)],
+		        ["+", Color.grey(0.2), Color.new(119/255, 125/255, 167/255, 0.5)],
+		    ])
+		    .action_({ |bu| if(bu.value == 0, { 
+		    		task.stop;
+		    		synth.set(\rate, 1);
+			    	task = Task({{ synth.set(\t_reset, 1); loopTime.wait}.loop }).start;
+			    }, { 
+			    	task.stop;
+		    		synth.set(\rate, 0.5);
+			    	task = Task({{ synth.set(\t_reset, 1); (loopTime*2).wait}.loop }).start;
+			    }); 
+		    });
 
 
-	    win.onClose_({synth.free;}).front;
+	    win.onClose_({synth.free; buffer.free; task.stop}).front;
 	}
 )

@@ -114,6 +114,6 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 // args in1, in2, out, tapBus
-Buffer.freeAll;
+// Buffer.freeAll;
 // g[\looperGui].value(0, 1, ~out, ~tapBus1);
 g[\looperGui2].value(0, 0);
