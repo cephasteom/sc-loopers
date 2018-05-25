@@ -1,8 +1,9 @@
 (
 	{|in1, in2, out, tapBus|
 
-	    var synth, win, buttons, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc, isMute=false;
+	    var synth, win, buttons, labels, firstTime=true, startTime=0, loopTime, cols=2, rows=2, size=80, fadeFunc, isMute=false, buffer;
 	    // manually fade on certain actions to avoid pops
+	    s.meter;
 	    fadeFunc = {|from, to, dur, syn, param|
 	    	var fade;
 			{fade = Env([from,to],[dur]).asStream;
@@ -14,7 +15,7 @@
 	    
 	    // synth
 	    synth = Synth(\looper, 
-	    	[\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9]
+	    	[\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \inBus, in1, \inBus2, in2, \outBus, out, \tapBus, tapBus, \loopTime, 19.9];
 	    );
 	    // GUI window
 	    win = Window(\looper, Rect(0, 0, 165, 165), false);
@@ -33,12 +34,12 @@
 		    ])
 			.action_({ |bu|
 				if(bu.value == 0, {
+			        fadeFunc.value(1,0,0.05, synth, \record); // fade out to avoid pops
 			        if(firstTime) {
 			            loopTime = thisThread.clock.beats - startTime; 
 			            synth.set(\loopTime, loopTime);
 			            firstTime = false;
 			        };
-			        fadeFunc.value(1,0,0.05, synth, \record); // fade out to avoid pops
 		        });
 				if(bu.value == 1, {
 		            if(firstTime) { startTime = thisThread.clock.beats };
@@ -56,10 +57,11 @@
 			        buttons[0].value = 0;
 			        buttons[2].value = 0;
 			        buttons[3].value = 0;
-			        if(isMute == false, {fadeFunc.value(1,0.0001,0.05, synth, \outMul)}); // fade out to avoid pops
+			        if(isMute == false, {fadeFunc.value(1.0,0.0,0.05, synth, \outMul)}); // fade out to avoid pops
+			        buffer.free;
 			        0.1.wait;
 			        synth.set(\buffer, Buffer.alloc(s, s.options.sampleRate * 20, 1), \record, 0, \loopTime, 19.9);
-			        fadeFunc.value(0.0,1,0.05, synth, \outMul); // fade in to avoid pops
+			        fadeFunc.value(0.0,1.0,0.05, synth, \outMul); // fade in to avoid pops
 			        firstTime = true;
 		    	}).start(AppClock);
 		    });
@@ -92,6 +94,6 @@
 		    });
 
 
-	    win.onClose_({synth.free}).front;
+	    win.onClose_({synth.free;}).front;
 	}
 )

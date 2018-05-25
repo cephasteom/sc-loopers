@@ -4,16 +4,25 @@ s.quit;
 // 1. SERVER CONFIG - any server setup key to this piece
 // **********************************************************************
 
-// read ServerOptions help file for properties of s.options
+~isHome = true;
+
 s = Server.local;
-// s.options.outDevice_('Built-in Output'); // home
-// s.options.inDevice_('Built-in Microph'); // home
-s.options.device = "DN32-USB"; // studio
-// s.options.numOutputBusChannels_(4); // outs 0 - 3 home
-s.options.numOutputBusChannels_(8); // outs 0 - 3 studio
-// s.options.numInputBusChannels_(2); // ins 4-5 (or 1... if using SoundIn.ar) home
-s.options.numInputBusChannels_(8); // ins 4-5 (or 1... if using SoundIn.ar) studio
-s.options.sampleRate_(48000);
+if(~isHome, { // home vars
+	s.options.outDevice_('Built-in Output');
+	s.options.inDevice_('Built-in Microph');
+	s.options.numOutputBusChannels_(4); 
+	s.options.numInputBusChannels_(2); 
+	s.options.sampleRate_(41000);
+	~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers"; // home
+	
+}, { // studio vars
+	s.options.device = "DN32-USB"; 
+	s.options.numOutputBusChannels_(8); 
+	s.options.numInputBusChannels_(8);
+	s.options.sampleRate_(48000);
+	~projectPath = "/Users/petethomas/code/project_loopers";
+});
+
 s.options.memSize_(2.pow(20)); // roughly 1 gig of realtime memory
 s.newBusAllocators;
 ServerBoot.removeAll;
@@ -26,8 +35,6 @@ ServerQuit.removeAll;
 // outs
 ~out = 0;
 ~tapBus1 = 2;
-// ~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers"; // home
-~projectPath = "/Users/petethomas/code/project_loopers"; // studio
 ~synthsPath = ~projectPath++"/synths";
 ~midiPath = ~projectPath++"/midi";
 ~guiPath = ~projectPath++"/gui";
@@ -63,6 +70,7 @@ ServerQuit.removeAll;
 	// MIDIIn.connectAll
 	g = Dictionary.new;
 	g.add(\looperGui -> (~guiPath++"/looper_gui.scd").load);
+	g.add(\looperGui2 -> (~guiPath++"/looper_gui2.scd").load);
 	
 };
 ~makeMidi = {
@@ -85,6 +93,7 @@ s.waitForBoot({
 	s.sync; // ensure actions have completed before moving on (synchronous)
 	// 5a. REGISTER SYNTHDEFS
 	(~synthsPath++"/tapDelay.scd").load;
+	(~synthsPath++"/looper.scd").load;
 	s.sync;
 	// load state
 	(~projectPath++"/data.scd").load;
@@ -96,7 +105,7 @@ s.waitForBoot({
 	s.freeAll;
 	s.sync;
 	// s.plotTree;
-	s.meter;
+	// s.meter;
 	// 5c. NOW READY TO BEGIN PERFORMANCE
 	"Done".postln;
 });
@@ -105,4 +114,6 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 // args in1, in2, out, tapBus
-g[\looperGui].value(0, 1, ~out, ~tapBus1);
+Buffer.freeAll;
+// g[\looperGui].value(0, 1, ~out, ~tapBus1);
+g[\looperGui2].value(0, 0);
