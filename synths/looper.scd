@@ -1,7 +1,7 @@
 // definition of the looper
 SynthDef(\looper, {
     // need a buffer to listen to and an input for the loop trigger
-    arg bufnum, t_reset, rate=1, out=0, in=0, record=1;
+    arg bufnum, t_reset, rate=1, out=0, in=0, record=1, vol=1;
 
     var inputSig, outputSig, existingSig, recHead;
 
@@ -18,7 +18,7 @@ SynthDef(\looper, {
     BufWr.ar(inputSig + existingSig, bufnum, recHead);
 
     // play back signal we got from the loop before the writing operation
-    Out.ar(out, existingSig);
+    Out.ar(out, existingSig!2*vol);
 }).add;
 
 // // create a big empty buffer (20 secs is enough for me)

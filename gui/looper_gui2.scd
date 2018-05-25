@@ -56,24 +56,25 @@
 		    	buffer.free;
 		    	task.stop;
 		    	firstTime = true;
+				buttons[0].value = 0;
+		        buttons[2].value = 0;
+		        buttons[3].value = 0;
 		    });
 
-	 //    // play/pause button
-		// buttons[2]
-		// 	.states_([
-		//         ["||", Color.grey(0.2), Color.new(148/255, 201/255, 169/255)],
-		//         [">", Color.grey(0.2), Color.new(148/255, 201/255, 169/255, 0.5)],
-		//     ])
-		//     .action_({ arg bu;
-		//     	if(bu.value == 0, {
-		//     		fadeFunc.value(0,1,0.001,synth,\outMul);
-		//     		isMute = false;
-		//     	});
-		//     	if(bu.value == 1, { 
-		//     		fadeFunc.value(1,0,0.001,synth,\outMul);
-		//     		isMute = true; 
-		//     	});
-		//     });
+	    // play/pause button
+		buttons[2]
+			.states_([
+		        ["||", Color.grey(0.2), Color.new(148/255, 201/255, 169/255)],
+		        [">", Color.grey(0.2), Color.new(148/255, 201/255, 169/255, 0.5)],
+		    ])
+		    .action_({ |bu| if(bu.value == 0, { 
+			    	task = Task({{ synth.set(\t_reset, 1); loopTime.wait}.loop }).start;
+			    	synth.set(\vol, 1);
+			    }, { 
+			    	task.stop;
+			    	synth.set(\vol, 0);
+			    }); 
+		    });
 
 	 //    // oct button
 		// buttons[3]
