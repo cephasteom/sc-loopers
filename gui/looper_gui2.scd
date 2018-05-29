@@ -76,12 +76,14 @@
 		    ])
 		    .action_({ |bu| if(bu.value == 0, { 
 		    		task.stop;
+		    		loopTime = loopTime/2;
 		    		synth.set(\rate, 1);
 			    	task = Task({{ synth.set(\t_reset, 1); loopTime.wait}.loop }).start;
 			    }, { 
 			    	task.stop;
+			    	loopTime = loopTime*2;
 		    		synth.set(\rate, 0.5);
-			    	task = Task({{ synth.set(\t_reset, 1); (loopTime*2).wait}.loop }).start;
+			    	task = Task({{ synth.set(\t_reset, 1); loopTime.wait}.loop }).start;
 			    }); 
 		    });
 
