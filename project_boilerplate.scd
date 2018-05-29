@@ -12,7 +12,7 @@ if(~isHome, { // home vars
 	s.options.inDevice_('Built-in Microph');
 	s.options.numOutputBusChannels_(4); 
 	s.options.numInputBusChannels_(2); 
-	s.options.sampleRate_(41000);
+	s.options.sampleRate_(44100);
 	~projectPath = "/Users/Pete/Documents/my-coding/supercollider/projects/project_loopers"; // home
 	
 }, { // studio vars

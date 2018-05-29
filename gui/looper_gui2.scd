@@ -44,6 +44,7 @@
 		        ["x", Color.grey(0.2), Color.new(198/255, 236/255, 174/255)],
 		    ])
 		    .action_({ arg bu;
+		    	// one of these two causes problems when the first looper created is erased. Why? Try not freeing the buffer and see what happens
 		    	synth.free;
 		    	buffer.free;
 		    	task.stop;
