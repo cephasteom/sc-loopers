@@ -114,4 +114,4 @@ s.waitForBoot({
 // 6. PERFORMANCE
 // **********************************************************************
 // args in, out
-g[\looperGui2].value(0, 0);
+// g[\looperGui2].value(0, 0);
